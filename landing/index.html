@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SentinelVision — per-worker PPE compliance from the cameras you own</title>
+<meta name="description" content="SentinelVision binds every PPE observation to a tracked worker, applies a configurable policy, and writes a tamper-evident audit trail. Runs on commodity cameras, on CPU, with no cloud dependency.">
+<meta name="theme-color" content="#f3f1ec">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3l11 6v8c0 6-6 10-11 12C11 27 5 23 5 17V9z' fill='%232457ff'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#0d1b2a;--mu:#5b6b7d;--ln:#dcd8ce;--bl:#2457ff;--or:#ff5a1f;--ok:#12a56b;--bad:#e5384f;--dk:#0b1623;--mono:ui-monospace,Consolas,Menlo,monospace;--sans:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:56px 56px;opacity:.45;-webkit-mask-image:radial-gradient(80% 60% at 70% 0,#000,transparent);mask-image:radial-gradient(80% 60% at 70% 0,#000,transparent)}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.04em;line-height:1.05}p{margin:0}a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--bl);outline-offset:3px;border-radius:8px}
+.w{max-width:1160px;margin:0 auto;padding:0 26px}.sec{padding:clamp(60px,9vw,104px) 0}[id]{scroll-margin-top:84px}
+.tag{display:inline-block;font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--bl);background:#e6ecff;padding:8px 12px;border-radius:99px;margin-bottom:18px}
+h2{font-size:clamp(28px,3.8vw,44px)}.lead{color:var(--mu);margin-top:14px;max-width:690px;font-size:17.5px}.hd{margin-bottom:clamp(30px,4vw,50px)}
+mark{background:linear-gradient(transparent 62%,#ffd9c9 62%);color:inherit}
+.btn{display:inline-flex;gap:10px;align-items:center;padding:15px 26px;border-radius:14px;font-weight:700;font-size:15px;border:2px solid var(--ink);transition:.25s cubic-bezier(.2,.7,.3,1)}
+.bp{background:var(--ink);color:#fff;box-shadow:5px 5px 0 var(--or)}.bp:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--or)}
+.bg{background:#fff;color:var(--ink);box-shadow:5px 5px 0 var(--ln)}.bg:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--bl)}
+nav{position:sticky;top:0;z-index:60;background:rgba(243,241,236,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
+nav .w{display:flex;justify-content:space-between;align-items:center;height:66px}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px;letter-spacing:-.03em}.brand svg{width:24px;height:26px}
+.brand small{font:700 10px var(--mono);border:1.5px solid var(--ink);border-radius:5px;padding:2px 5px}
+.nl{display:flex;gap:26px;align-items:center;font-weight:600;font-size:14.5px;color:var(--mu)}.nl a:hover{color:var(--ink)}.nl .btn{padding:9px 16px;font-size:13.5px;box-shadow:3px 3px 0 var(--or);color:#fff}
+.hero{padding:clamp(40px,6vw,84px) 0 0;position:relative}
+.hg{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(30px,4vw,60px);align-items:center}
+.pill{display:inline-flex;gap:9px;align-items:center;font:600 12px var(--mono);color:var(--mu);background:#fff;border:1px solid var(--ln);padding:8px 14px;border-radius:99px}.pill i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pl 2s infinite}
+h1{font-size:clamp(38px,5.8vw,68px);margin:22px 0}.sub{color:var(--mu);font-size:18px;max-width:600px}
+.act{display:flex;flex-wrap:wrap;gap:16px;margin-top:34px}.trust{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:30px;font-size:14px;color:var(--mu);font-weight:600}.trust span:before{content:"✓ ";color:var(--ok);font-weight:800}
+.s3d{perspective:1300px}.rig{position:relative;aspect-ratio:16/12;transform-style:preserve-3d;transform:rotateY(-14deg) rotateX(9deg);transition:transform .2s ease-out}
+.ly{position:absolute;inset:0;border-radius:22px}
+.l0{background:var(--dk);border:2px solid var(--ink);box-shadow:24px 30px 0 -4px rgba(13,27,42,.13),0 40px 70px -30px rgba(13,27,42,.55);overflow:hidden}
+.l0:before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 70% 0,rgba(36,87,255,.45),transparent 70%),repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 44px),repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 44px)}
+.scan{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--or),transparent);box-shadow:0 0 22px var(--or);animation:sc 5s ease-in-out infinite}
+.l1{transform:translateZ(46px);pointer-events:none}.l2{transform:translateZ(92px);pointer-events:none}
+.det{position:absolute;border:2.5px solid var(--c);border-radius:5px;background:color-mix(in srgb,var(--c) 10%,transparent)}
+.det b{position:absolute;bottom:100%;left:-2px;margin-bottom:6px;font:700 11px/1 var(--mono);color:#fff;background:var(--c);padding:5px 8px;border-radius:5px;white-space:nowrap}
+.hud{position:absolute;left:16px;right:16px;top:14px;display:flex;justify-content:space-between;font:700 11px var(--mono);color:#fff;letter-spacing:.06em}.hud span:last-child{color:#ff8da0}
+.chain{position:absolute;left:16px;right:16px;bottom:14px;display:flex;gap:12px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:11px 14px;font:700 11.5px var(--mono);box-shadow:5px 5px 0 var(--or)}
+.vt{display:flex;gap:3px}.vt i{width:11px;height:20px;border-radius:3px;background:var(--ln)}.vt i.o{background:var(--or)}
+.chain em{margin-left:auto;font-style:normal;background:#e6ecff;color:var(--bl);padding:5px 8px;border-radius:6px}
+.band{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:clamp(40px,5vw,70px)}
+.m{background:#fff;border:2px solid var(--ink);border-radius:18px;padding:22px;transition:.3s}.m:hover{transform:translateY(-5px) rotate(-.6deg);box-shadow:6px 6px 0 var(--bl)}
+.m b{display:block;font-size:clamp(28px,3.4vw,42px);letter-spacing:-.045em;line-height:1}.m span{display:block;color:var(--mu);font-size:13.5px;margin-top:9px}.m i{font:700 10.5px var(--mono);color:var(--or);text-transform:uppercase;letter-spacing:.14em;font-style:normal}
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;position:relative}.pipe:before{content:"";position:absolute;left:5%;right:5%;top:31px;border-top:3px dashed var(--ln)}
+.nd{position:relative;background:#fff;border:2px solid var(--ink);border-radius:18px;padding:22px 18px;transition:.3s}.nd:hover{transform:translateY(-6px);box-shadow:6px 6px 0 var(--or)}
+.nd .n{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--bl);color:#fff;font:800 15px var(--mono);margin:-42px 0 14px;border:2px solid var(--ink)}
+.nd h3{font-size:19px}.nd p{color:var(--mu);font-size:14px;margin-top:8px}.nd em{display:block;font:700 10.5px var(--mono);color:var(--bl);margin-top:14px;text-transform:uppercase;letter-spacing:.08em;font-style:normal}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cd{background:#fff;border:2px solid var(--ink);border-radius:20px;padding:26px;transition:.3s}.cd:hover{transform:translateY(-5px);box-shadow:7px 7px 0 var(--bl)}.cd.wd{grid-column:span 2;background:var(--dk);color:#fff}.cd.wd p{color:#aab7c8}
+.cd .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:#ffe9df;font-size:21px;border:2px solid var(--ink)}.cd.wd .ic{background:#2c4fd1}
+.cd h3{font-size:19px;margin:16px 0 8px}.cd p{color:var(--mu);font-size:14.5px}.tg{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}.tg span{font:700 11px var(--mono);border:1.5px solid currentColor;border-radius:99px;padding:5px 10px;opacity:.75}
+.assoc{display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap;font:700 12px var(--mono)}.assoc .pb{border:2px dashed #7aa0ff;border-radius:12px;padding:12px;display:grid;gap:8px}.assoc .pb span{padding:8px 14px;border-radius:8px;border:2px solid}
+.dark{background:var(--dk);color:#fff;border-radius:34px;margin:0 14px}.dark .lead{color:#9fb0c5}.dark .tag{background:#1b2d4d;color:#8fb0ff}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,4vw,56px);align-items:start}
+.stp{position:relative;padding:0 0 24px 38px;border-left:2px solid #25374f;margin-left:8px}.stp:last-child{border-color:transparent}
+.stp:before{content:"";position:absolute;left:-9px;top:4px;width:16px;height:16px;border-radius:50%;background:var(--or);box-shadow:0 0 0 5px rgba(255,90,31,.2)}
+.stp h3{font-size:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.stp code{font:700 11px var(--mono);background:#1b2d4d;color:#8fb0ff;padding:4px 8px;border-radius:6px}.stp p{color:#9fb0c5;font-size:14.5px;margin-top:7px}
+pre{margin:0;font:13px/1.8 var(--mono);overflow-x:auto;padding:20px;color:#d5e1f1}
+.cb{background:#050b13;border:1px solid #25374f;border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px #000}.cb header{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid #1d2c42;font:700 11.5px var(--mono);color:#7f90a8}.cb header i{width:10px;height:10px;border-radius:50%;background:#2a3a52}.cb header span{margin-left:auto;color:var(--or)}
+.k{color:#8fb0ff}.s{color:#ffc58f}.b{color:#c4b5fd}.r{color:#ff8da0}.g{color:#5fe0a8}.c{color:#5f7189;font-style:italic}
+.lg{display:flex;flex-wrap:wrap;gap:12px 24px;margin:-6px 0 24px;font-weight:700;font-size:13.5px}.lg span:before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:8px;background:var(--c)}
+.cl{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.rw{display:grid;grid-template-columns:12px 1fr 90px 48px;gap:14px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:15px 18px;transition:.25s}.rw:hover{transform:translateX(6px);box-shadow:-6px 6px 0 var(--c)}
+.rw i{width:12px;height:12px;border-radius:50%;background:var(--c)}.rw b{font:700 14.5px var(--mono)}.rw u{height:6px;border-radius:9px;background:var(--ln);text-decoration:none;overflow:hidden}.rw u s{display:block;height:100%;background:var(--c)}.rw span{font:800 13px var(--mono);text-align:right}
+.note{margin-top:22px;padding:20px 22px;border-radius:16px;background:#fff3ec;border:2px solid var(--or);color:#5a3220;font-size:14.5px}.note b{color:var(--ink)}
+.run{display:grid;grid-template-columns:1fr 1fr;gap:18px}.run .cb{box-shadow:7px 7px 0 var(--ln)}
+.dp{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}.dp div{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:20px;transition:.3s}.dp div:hover{transform:translateY(-4px);background:#e6ecff}.dp b{display:block;font-size:15px}.dp p{color:var(--mu);font-size:13.5px;margin-top:8px}
+.cta{background:linear-gradient(135deg,var(--bl),#5b3dff);color:#fff;border:2px solid var(--ink);border-radius:30px;padding:clamp(40px,7vw,80px) 28px;text-align:center;box-shadow:10px 10px 0 var(--or)}.cta h2{max-width:760px;margin:0 auto}.cta p{color:#d8e0ff;margin-top:16px}.cta .act{justify-content:center}.cta .tag{background:#fff3}.cta .tag{color:#fff}
+.cta mark{background:linear-gradient(transparent 62%,rgba(255,90,31,.7) 62%);color:#fff}.ch{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:28px}.ch span{font:700 11.5px var(--mono);background:#fff2;border:1px solid #fff5;border-radius:99px;padding:8px 13px}
+footer{padding:clamp(40px,6vw,64px) 0 36px}.fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px}.fg p{color:var(--mu);font-size:14px;margin-top:12px;max-width:290px}.fg h4{font:700 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mu);margin:0 0 14px}.fg a{display:block;color:var(--mu);font-size:14px;padding:4px 0}.fg a:hover{color:var(--bl)}
+.fb{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid var(--ln);color:var(--mu);font-size:13px}
+.rv{opacity:0;transform:translateY(28px);transition:.8s cubic-bezier(.2,.7,.3,1)}.rv.in{opacity:1;transform:none}
+@keyframes pl{50%{opacity:.3}}@keyframes sc{0%,100%{top:8%}50%{top:90%}}
+@media(max-width:1000px){.hg,.arch,.run{grid-template-columns:1fr}.bento{grid-template-columns:1fr 1fr}.pipe{grid-template-columns:repeat(2,1fr)}.pipe:before{display:none}.nd .n{margin-top:0}.band{grid-template-columns:1fr 1fr}.dp{grid-template-columns:1fr 1fr}.cl{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.rig{transform:none!important}}
+@media(max-width:620px){.nl a:not(.btn){display:none}.bento,.pipe,.dp,.band,.fg{grid-template-columns:1fr}.cd.wd{grid-column:auto}.rw{grid-template-columns:12px 1fr 48px}.rw u{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav aria-label="Primary"><div class="w">
+<a class="brand" href="#top"><svg viewBox="0 0 32 34" fill="none"><path d="M16 2l12 6.5v10.8C28 26 20 31 16 33 12 31 4 26 4 19.3V8.5z" fill="#2457ff" stroke="#0d1b2a" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="17" r="4" fill="#ff5a1f"/></svg>SentinelVision<small>EDGE</small></a>
+<div class="nl"><a href="#pipeline">Pipeline</a><a href="#features">Capabilities</a><a href="#architecture">Architecture</a><a href="#policy">Policy</a><a class="btn bp" href="#run">Run it locally →</a></div>
+</div></nav>
+
+<header class="hero" id="top"><div class="w">
+<div class="hg">
+<div>
+<span class="pill"><i></i>Phase 2 · tracking · association · temporal voting</span>
+<h1>Turn commodity cameras into a <mark>per-worker safety record.</mark></h1>
+<p class="sub">SentinelVision binds every PPE observation to a tracked worker, applies the policy you configure, and writes a tamper-evident audit trail. It runs on the cameras, laptops and edge boxes you already own, with no proprietary hardware and no cloud dependency.</p>
+<div class="act"><a class="btn bp" href="http://127.0.0.1:7860" target="_blank">Try live demo →</a><a class="btn bg" href="#run">Run it locally</a></div>
+<div class="trust"><span>No cloud dependency</span><span>Realtime on CPU</span><span>Apache-2.0</span></div>
+</div>
+<div class="s3d" id="s3d"><figure class="rig" id="rig" style="margin:0" role="img" aria-label="Illustrative camera frame: worker #17 tracked, Hardhat compliant, NO-Safety Vest violation, 6 of 10 frames agree, SHA-256 hash chained to the previous event.">
+<div class="ly l0"><div class="scan"></div></div>
+<div class="ly l1">
+<div class="det" style="--c:#8d9bb0;left:7%;top:50%;width:14%;height:28%"><b>Safety Cone · 0.58</b></div>
+<div class="det" style="--c:#6f7d93;right:6%;top:30%;width:22%;height:46%"><b>machinery · 0.61</b></div>
+</div>
+<div class="ly l2">
+<div class="hud"><span>edge-node-01 · cam-04 · gate B</span><span>● LIVE</span></div>
+<div class="det" style="--c:#2457ff;left:38%;top:26%;width:25%;height:56%"><b>person #17 · 0.93</b></div>
+<div class="det" style="--c:#12a56b;left:41%;top:18%;width:19%;height:12%"><b>Hardhat · 0.90</b></div>
+<div class="det" style="--c:#e5384f;left:40%;top:46%;width:21%;height:26%"><b>NO-Safety Vest · 0.81</b></div>
+<div class="chain"><span>#17</span><span class="vt" id="vt"></span><span>6/10</span><em>sha256 9f3c…a41d</em></div>
+</div></figure></div>
+</div>
+<div class="band">
+<div class="m"><i>verified</i><b>96%</b><span>Test coverage across the pipeline</span></div>
+<div class="m"><i>green</i><b>289</b><span>Passing tests in CI</span></div>
+<div class="m"><i>taxonomy</i><b>10</b><span>PPE &amp; context classes</span></div>
+<div class="m"><i>identity</i><b>ByteTrack</b><span>Tracking backend for stable worker IDs</span></div>
+</div>
+</div></header>
+
+<main>
+<section class="sec" id="pipeline"><div class="w rv">
+<div class="hd"><span class="tag">The pipeline</span><h2>Five deterministic stages, one accountable event</h2><p class="lead">Detection is deliberately permissive, while commitment is deliberately conservative. Nothing is written to the audit log until the pipeline is sure it is looking at a person, and not at a flicker.</p></div>
+<div class="pipe" id="pp"></div>
+</div></section>
+
+<section class="sec" id="features" style="padding-top:0"><div class="w rv">
+<div class="hd"><span class="tag">Capabilities</span><h2>Built like infrastructure, not like a demo</h2><p class="lead">Every layer earns its keep: typed configuration, observable runtime, and evidence that stands up to review.</p></div>
+<div class="bento" id="bn"></div>
+</div></section>
+
+<section class="sec dark" id="architecture"><div class="w rv">
+<div class="hd"><span class="tag">Architecture</span><h2>A straight line from camera to evidence</h2><p class="lead">Each stage has one job, one input and one output. That linearity is what makes behaviour reproducible and bugs shallow.</p></div>
+<div class="arch"><div id="st"></div>
+<div class="cb"><header><i></i><i></i><i></i>events.jsonl<span>EXAMPLE RECORD</span></header><pre id="js"></pre></div></div>
+</div></section>
+
+<section class="sec" id="policy"><div class="w rv">
+<div class="hd"><span class="tag">Policy &amp; classes</span><h2>Ten classes, each with its own confidence bar</h2><p class="lead">Violations are derived, never assumed: a worker wearing the required item is compliant, and the matching absence class at a higher threshold records the finding. Context classes describe the scene and raise nothing on their own.</p></div>
+<div class="lg"><span style="--c:var(--ok)">Positive PPE</span><span style="--c:var(--bad)">Violation</span><span style="--c:#8d9bb0">Context class</span></div>
+<div class="cl" id="cl"></div>
+<div class="note"><b>Asymmetric by design.</b> A violation class sits at 0.65 while its positive counterpart sits at 0.50, so raising an alarm always demands more evidence than recording compliance. Combined with the six-of-ten quorum, that ordering keeps a false positive off a supervisor's desk.</div>
+</div></section>
+
+<section class="sec" id="run" style="padding-top:0"><div class="w rv">
+<div class="hd"><span class="tag">Deployment</span><h2>Installed and running in one command</h2><p class="lead">Point the CLI at a webcam index or a recorded file. Events stream to the JSONL log while the run is live, and the stats block prints on exit.</p></div>
+<div class="run"><div class="cb"><header><i></i><i></i><i></i>live webcam<span>bash</span></header><pre id="c1"></pre></div><div class="cb"><header><i></i><i></i><i></i>batch over footage<span>bash</span></header><pre id="c2"></pre></div></div>
+<div class="dp" id="dp"></div>
+</div></section>
+
+<section class="sec" style="padding-top:0"><div class="w rv"><div class="cta">
+<span class="tag">Get started</span><h2>Safety evidence from the cameras <mark>already on site.</mark></h2>
+<p>Clone it, point it at a camera and watch a violation become a signed, chained record instead of an anecdote.</p>
+<div class="act"><a class="btn bg" href="#run">Run it locally →</a><a class="btn bp" style="background:#0d1b2a" href="#pipeline">Review the pipeline</a></div>
+<div class="ch"><span>Apache-2.0 licensed</span><span>Python 3.9+</span><span>Realtime on CPU</span><span>Append-only JSONL</span><span>No cloud required</span></div>
+</div></div></section>
+</main>
+
+<footer><div class="w"><div class="fg">
+<div><a class="brand" href="#top">SentinelVision</a><p>Per-worker PPE compliance from commodity cameras, with a tamper-evident audit trail that stays on your site.</p></div>
+<div><h4>Product</h4><a href="#pipeline">Pipeline</a><a href="#features">Capabilities</a><a href="#architecture">Architecture</a></div>
+<div><h4>Guide</h4><a href="#run">Installation</a><a href="#policy">Policy &amp; classes</a><a href="#run">CLI reference</a></div>
+<div><h4>Project</h4><a href="https://github.com/" rel="noopener">Source</a><a href="#policy">Class taxonomy</a><a href="#top">Back to top</a></div>
+</div><div class="fb"><span>SentinelVision · Apache-2.0</span><span>Built with YOLOv8 · ByteTrack · Ultralytics · Pydantic · structlog</span></div></div></footer>
+
+<script>
+const $=i=>document.getElementById(i),H=(el,h)=>el.innerHTML=h;
+new IntersectionObserver((e,o)=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.1}).observe&&document.querySelectorAll('.rv').forEach(e=>new IntersectionObserver((x,o)=>x[0].isIntersecting&&(e.classList.add('in'),o.disconnect()),{threshold:.1}).observe(e));
+/* 3D tilt */
+const rig=$('rig');$('s3d').onmousemove=e=>{const r=e.currentTarget.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;rig.style.transform=`rotateY(${-14+x*16}deg) rotateX(${9-y*14}deg)`};
+$('s3d').onmouseleave=()=>rig.style.transform='';
+H($('vt'),[1,1,0,1,1,1,0,1,1,0].map(v=>`<i class="${v?'o':''}"></i>`).join(''));
+/* pipeline */
+H($('pp'),[["Detect","YOLOv8 locates persons and PPE items in every frame, each class scored against its own confidence threshold.","frames → boxes"],["Track","ByteTrack assigns a stable identity across frames, so an observation belongs to a worker rather than to a pixel box.","boxes → #IDs"],["Associate","PPE detections bind to the right worker by IoU or geometric containment, with overlapping boxes resolved deterministically.","#IDs → worker+PPE"],["Vote","Six of the last ten frames must agree before a violation is committed. One bad frame can never raise an event.","window → verdict"],["Audit","Committed events are SHA-256 hashed into an append-only JSONL log, chained so tampering is detectable.","verdict → evidence"]].map((s,i)=>`<article class="nd"><div class="n">0${i+1}</div><h3>${s[0]}</h3><p>${s[1]}</p><em>${s[2]}</em></article>`).join(''));
+/* features */
+H($('bn'),`<article class="cd wd"><div class="ic">🧍</div><h3>Observations bound to a worker</h3><p>A hat, a vest and a mask are not three detections floating on a frame; they are attributes of worker #17 at gate B. Association by IoU or geometric containment is what turns a detector into a compliance system.</p>
+<div class="assoc"><span style="color:#8d9bb0">IoU · containment →</span><div class="pb"><span style="color:#5fe0a8">Hardhat 0.90</span><span style="color:#ff8da0">NO-Vest 0.81</span><small style="color:#7aa0ff;text-align:center">person #17</small></div><span>→</span><span style="border:2px solid #384a66;border-radius:12px;padding:12px 16px;color:#fff">worker event<br><small style="color:#8d9bb0">1 record, 2 findings</small></span></div>
+<div class="tg"><span>IoU</span><span>containment</span><span>deterministic</span></div></article>`+[["📐","Policy you configure","Required PPE per zone, thresholds per class, and the verdict rules, declared in typed configuration, not scattered through code.","Pydantic|per-zone rules"],["🗳️","Temporal voting","A ten-frame window with a six-frame quorum absorbs occlusion, motion blur and model indecision without hiding real violations.","6 / 10 quorum|anti-flicker"],["🔗","Tamper-evident audit","Each event carries a SHA-256 digest over its contents and the previous digest. Records are appended, never rewritten.","append-only JSONL|hash chain"],["🏭","No cloud, no lock-in","Inference, policy and storage stay on site. Air-gapped plants are a supported deployment, not an exception.","on-prem|offline-first"],["📊","Observable runtime","Structured logs, per-stage timings and an end-of-run stats block, so a shift can be reviewed without guesswork.","structlog|--stats"]].map(f=>`<article class="cd"><div class="ic">${f[0]}</div><h3>${f[1]}</h3><p>${f[2]}</p><div class="tg">${f[3].split('|').map(t=>`<span>${t}</span>`).join('')}</div></article>`).join(''));
+/* architecture */
+H($('st'),[["Capture","source","Webcam index, RTSP stream or a recorded file: one interface, so a live gate and an archived shift behave identically."],["Detect","YOLOv8 · Ultralytics","Persons, PPE and context objects per frame, each class gated by its own threshold from the taxonomy."],["Track","ByteTrack","Identity persists through occlusion and short exits, giving every observation a worker to belong to."],["Associate &amp; vote","policy engine","PPE binds to its worker, then a ten-frame window with a six-frame quorum decides whether the finding becomes an event."],["Commit","SHA-256 + JSONL","The event is serialised, hashed with the previous digest, and appended. The trail can be verified later, line by line."],["Report","stats &amp; logs","Run summaries and structured logs describe what the system saw, when it hesitated and what it committed."]].map(s=>`<div class="stp"><h3>${s[0]}<code>${s[1]}</code></h3><p>${s[2]}</p></div>`).join(''));
+const q=t=>`<span class="s">"${t}"</span>`,K=t=>`<span class="k">"${t}"</span>`;
+H($('js'),`{
+  ${K('ts')}: ${q('2026-10-13T09:41:07.221Z')},
+  ${K('camera')}: ${q('cam-04')},  ${K('zone')}: ${q('gate-b')},
+  ${K('track_id')}: <span class="b">17</span>, ${K('frames_tracked')}: <span class="b">412</span>,
+  ${K('findings')}: [
+    { ${K('class')}: ${q('Hardhat')}, ${K('conf')}: <span class="b">0.90</span>,
+      ${K('verdict')}: <span class="g">"present"</span> },
+    { ${K('class')}: ${q('NO-Safety Vest')}, ${K('conf')}: <span class="b">0.81</span>,
+      ${K('verdict')}: <span class="r">"violation"</span>, ${K('votes')}: <span class="b">6</span>,
+      ${K('window')}: <span class="b">10</span> }
+  ],
+  ${K('policy')}: ${q('gate-b: hardhat+vest required')},
+  ${K('prev_sha256')}: ${q('b71e…')},
+  ${K('sha256')}: ${q('9f3c…a41d')}
+}`);
+/* classes */
+H($('cl'),[["person",.35,"#8d9bb0"],["Hardhat",.5,"#12a56b"],["NO-Hardhat",.65,"#e5384f"],["Safety Vest",.5,"#12a56b"],["NO-Safety Vest",.65,"#e5384f"],["Mask",.5,"#12a56b"],["NO-Mask",.65,"#e5384f"],["Safety Cone",.55,"#8d9bb0"],["machinery",.55,"#8d9bb0"],["vehicle",.55,"#8d9bb0"]].map(c=>`<div class="rw" style="--c:${c[2]}"><i></i><b>${c[0]}</b><u><s style="width:${c[1]*100}%"></s></u><span>${c[1].toFixed(2)}</span></div>`).join(''));
+/* run */
+const f=t=>`<span class="k">${t}</span>`,o=t=>`<span class="s">${t}</span>`,m=t=>`<span class="c">${t}</span>`;
+H($('c1'),`${m('# install with dev + vision extras')}
+${f('pip')} install -e ${o('".[dev,vision]"')}
+
+${m('# live gate camera, window preview on')}
+${f('python')} -m <span class="b">sentinelvision</span> \\
+  ${o('--model')} models/ppe.pt \\
+  ${o('--source')} 0 \\
+  ${o('--show')} \\
+  ${o('--events-jsonl')} events.jsonl \\
+  ${o('--stats')}`);
+H($('c2'),`${m('# headless pass over a recorded shift')}
+${f('python')} -m <span class="b">sentinelvision</span> \\
+  ${o('--model')} models/ppe.pt \\
+  ${o('--source')} footage/gate-b.mp4 \\
+  ${o('--events-jsonl')} events.jsonl \\
+  ${o('--stats')}
+
+${m('# append-only: read the tail, never edit it')}
+${f('tail')} -n 1 events.jsonl`);
+H($('dp'),[["Runs on the hardware you have","A recent CPU is enough for realtime inference at a gate; a GPU is an optimisation, not a prerequisite."],["Fits an existing camera estate","Any source OpenCV can open (USB, IP camera or RTSP encoder you already run) becomes a monitored point."],["Evidence that survives review","Hashed, ordered records are exportable as plain JSONL, readable by a spreadsheet, a script or an auditor."],["Tested like software should be","289 passing tests at 96% coverage across detection, association, voting and the audit writer."]].map(d=>`<div><b>${d[0]}</b><p>${d[1]}</p></div>`).join(''));
+</script>
+</body>
+</html>

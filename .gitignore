@@ -1,0 +1,30 @@
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.testvenv/
+
+# caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# model weights — too big for git; ship via HF Hub instead
+models/
+*.pt
+*.onnx
+*.pth
+
+# runs & outputs
+runs/
+eval_out/
+eval_images/
+*.mp4
+events.jsonl
