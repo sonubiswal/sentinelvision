@@ -1,8 +1,10 @@
 <div align="center">
 
-# 🛡️ SentinelVision
+<a href="https://sentinelvision-sonubiswal.netlify.app">
+  <img src="assets/banner.svg" alt="SentinelVision: per-worker PPE compliance from the cameras you already own" width="100%"/>
+</a>
 
-### Per-worker PPE compliance from the cameras you already own.
+<br/>
 
 SentinelVision binds every PPE observation to a **tracked worker**, applies the policy you configure,<br/>
 and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud dependency.
