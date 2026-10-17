@@ -5,9 +5,14 @@
 </a>
 
 <br/>
+<br/>
 
-SentinelVision binds every PPE observation to a **tracked worker**, applies the policy you configure,<br/>
-and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud dependency.
+# SentinelVision
+
+### Detect permissively. Commit conservatively.
+
+PPE compliance that answers the question every safety manager actually asks:<br/>
+**which worker, which rule, and can you prove it?**
 
 <br/>
 
@@ -24,9 +29,8 @@ and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud 
 ![ByteTrack](https://img.shields.io/badge/ByteTrack-tracking-2457ff?style=flat-square)
 
 **[Live site](https://sentinelvision-sonubiswal.netlify.app)** ·
-**[Quick start](#try-it-in-two-minutes)** ·
-**[How it works](#how-the-pipeline-works)** ·
-**[Demo](#demo)** ·
+**[Quick start](#quick-start)** ·
+**[How it works](#how-it-works)** ·
 **[Roadmap](#roadmap)** ·
 **[Links](#links)**
 
@@ -34,29 +38,63 @@ and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud 
 
 <br/>
 
+SentinelVision binds every PPE observation to a **tracked worker**, applies the policy you configure,
+and writes a **tamper-evident audit trail**. It runs on commodity cameras and a CPU, with no cloud dependency.
+
 > [!NOTE]
 > **Status: Phase 2 (accuracy core) complete.** Detector, class taxonomy, visualization, CLI and the
 > full pipeline: track → associate → N-of-M vote → track-bound violation events.
 > Phases 3–8 are roadmap, not built yet.
 
+---
+
+## At a glance
+
+<table>
+<tr>
+<td align="center" width="25%"><h3>6 of 10</h3>frames must agree<br/>before an event is raised</td>
+<td align="center" width="25%"><h3>SHA-256</h3>hash-chained<br/>audit log</td>
+<td align="center" width="25%"><h3>289</h3>weight-free tests<br/>at 96% coverage</td>
+<td align="center" width="25%"><h3>CPU only</h3>no GPU, no cloud,<br/>no camera needed to test</td>
+</tr>
+</table>
+
 **Benchmark (Phase 8):** SH17 val mAP@50 = `TBD` · mAP@50:95 = `TBD` · person-attributed violation F1 = `TBD`
 
 ---
 
-## Highlights
+## Why SentinelVision
+
+```
+frame → YOLO → draw box → done        # what everyone else ships
+```
+
+The model is about 20% of the work. The other 80% is association, rules and operations, and the
+failure modes that come with skipping them.
+
+| Failure mode | Why it happens | What SentinelVision does | Phase |
+|---|---|---|:---:|
+| Single-frame false positives | One blurry frame flags a violation | N-of-M temporal voting per track | 2 (done) |
+| Violation with no owner | `NO-Hardhat` detected, but *which* worker? | Person attribution via IoU / containment + track ID | 2 (done) |
+| One-size-fits-all rules | A welding bay is not a loading dock | Zone policies with per-zone PPE requirements | 3 |
+| Alert fatigue | 200 alerts a shift, all ignored | Per-worker cooldown and severity tiers | 3–4 |
+| No audit trail | "Prove it happened" | Hash-chained event log in SQLite / Postgres | 4 |
+| Demo-only | Runs on a laptop, dies on a Jetson | ONNX / TensorRT export and Docker | 7 |
+
+### Core capabilities
 
 | | |
 |---|---|
 | **Per-worker attribution** | Every `NO-Hardhat` is bound to a tracked person, never a floating box. |
 | **Temporal voting** | A violation must appear in 6 of the last 10 frames. One bad frame can never raise an event. |
-| **Tamper-evident audit trail** | SHA-256 hash-chained event log. Edit one character and the chain breaks. |
+| **Tamper-evident audit trail** | Edit one character and the chain breaks. |
 | **Class-aware thresholds** | Recall-tolerant for people, precision-strict for violations. |
 | **Runs anywhere** | Commodity cameras, CPU only, zero cloud dependency. |
-| **Weight-free tests** | 289 tests, 96% coverage, no torch, no weights, no camera required. |
+| **Weight-free tests** | No torch, no weights, no camera required. |
 
 ---
 
-## Try it in two minutes
+## Quick start
 
 ```bash
 pip install -e ".[dev,vision]"
@@ -75,41 +113,12 @@ The demo app has four tabs:
 
 > Set `SV_MODEL=path/to/weights.pt` to use weights other than `models/ppe.pt`.
 
----
-
-## Demo
-
-> **Landing page:** [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app)
->
-> *60-second webcam demo: coming soon (will be attached to the repo's Releases).*
+Prefer to explore first? The landing page is live at
+[sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app).
 
 ---
 
-## Why this is not "another YOLO PPE detector"
-
-```
-frame → YOLO → draw box → done        # what everyone else ships
-```
-
-The model is about 20% of the work. The other 80% is association, rules and operations, and the
-failure modes that come with skipping them:
-
-| Failure mode | Why it happens | What SentinelVision does | Phase |
-|---|---|---|---|
-| Single-frame false positives | One blurry frame flags a violation | N-of-M temporal voting per track | 2 (done) |
-| Violation with no owner | `NO-Hardhat` detected, but *which* worker? | Person attribution via IoU / containment + track ID | 2 (done) |
-| One-size-fits-all rules | A welding bay is not a loading dock | Zone policies with per-zone PPE requirements | 3 |
-| Alert fatigue | 200 alerts a shift, all ignored | Per-worker cooldown and severity tiers | 3–4 |
-| No audit trail | "Prove it happened" | Hash-chained event log in SQLite / Postgres | 4 |
-| Demo-only | Runs on a laptop, dies on a Jetson | ONNX / TensorRT export and Docker | 7 |
-
-> [!TIP]
-> The demo app already includes a hash-chained JSONL log so you can see the idea working.
-> The production audit store (SQLite, snapshot archive, retention) lands in Phase 4.
-
----
-
-## How the pipeline works
+## How it works
 
 ```mermaid
 flowchart LR
@@ -138,7 +147,7 @@ event until the pipeline is sure it is looking at a person and not a flicker.
 | 5 | **Audit** | Committed events carry a SHA-256 digest over their contents and the previous digest. |
 
 <details>
-<summary><b>Example event (click to expand)</b></summary>
+<summary><b>Example event</b></summary>
 
 <br/>
 
@@ -160,9 +169,17 @@ event until the pipeline is sure it is looking at a person and not a flicker.
 
 </details>
 
+> [!TIP]
+> The demo app already includes a hash-chained JSONL log so you can see the idea working.
+> The production audit store (SQLite, snapshot archive, retention) lands in Phase 4.
+
 ---
 
-## The class taxonomy
+## Design principles
+
+**Evidence scales with consequence.** A missed worker is cheap. A false violation erodes trust.
+Recall-tolerant bars apply to people, precision-strict bars to violation classes, and the 6-of-10
+quorum sits on top, so raising an alarm always demands more evidence than recording compliance.
 
 ```python
 CLASS_THRESHOLDS = {
@@ -179,15 +196,9 @@ CLASS_THRESHOLDS = {
 }
 ```
 
-A missed worker is cheap. A false violation erodes trust. Hence the split: recall-tolerant bars for
-people, precision-strict bars for violation classes. Combined with the 6-of-10 quorum, raising an
-alarm always demands more evidence than recording compliance.
-
-### Two foundations, deliberately hardened
-
-**1. Name normalization.** The dataset emits `NO-Safety Vest`, with an uppercase prefix and a space
-inside the name, while `Safety Vest` is a *compliant* class. Naive `startswith("NO")` or `split` logic
-breaks on that space and silently turns a violation into compliance.
+**Names are a safety surface.** The dataset emits `NO-Safety Vest`, with an uppercase prefix and a
+space inside the name, while `Safety Vest` is a *compliant* class. Naive `startswith("NO")` or `split`
+logic breaks on that space and silently turns a violation into compliance.
 
 ```python
 normalize_class_name("NO-Safety Vest")        # -> "no-safety-vest"
@@ -202,8 +213,8 @@ automatically:
 VIOLATION_CLASSES = tuple(sorted(s for s in NORMALIZED_CLASSES if s.startswith("no-")))
 ```
 
-**2. BGR correctness.** OpenCV is BGR, not RGB. The palette is defined once as explicit BGR tuples
-and asserted channel by channel in the tests.
+**Colors are a correctness bug waiting to happen.** OpenCV is BGR, not RGB. The palette is defined
+once as explicit BGR tuples and asserted channel by channel in the tests.
 
 ```python
 GREEN_BGR = (0, 255, 0)   # green-dominant: index 1 is 255
@@ -215,7 +226,7 @@ the frame still gets a readable label.
 
 ---
 
-## Quickstart (CLI)
+## Command line
 
 ```bash
 # dev install (tests + lint only: no torch, no weights, no camera)
@@ -262,10 +273,10 @@ vehicle         0.55
 
 ---
 
-## Repository layout
+## Architecture
 
 <details>
-<summary><b>Expand the project tree</b></summary>
+<summary><b>Repository layout</b></summary>
 
 <br/>
 
@@ -302,9 +313,7 @@ sentinelvision/
 Everything is testable with zero heavy dependencies: `ultralytics` is imported lazily inside
 `Detector.load()`, and the tests inject a fake model exposing the same `names` / `predict()` surface.
 
----
-
-## Design decisions
+### Technology choices
 
 | Layer | Choice | Why not the obvious pick |
 |---|---|---|
@@ -334,10 +343,9 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 | **7** | ONNX / TensorRT export, Docker Compose, Jetson profile | 2 days | Planned |
 | **8** | Benchmark on SH17 / Pictor-v3, publish numbers, open weights | 3 days | Planned |
 
-### Still to ship for a credible public release
+### Remaining for a credible public release
 
 - [ ] Benchmark table
-- [ ] 60-second real-webcam demo GIF
 - [ ] Hosted demo
 - [ ] Reproducible `train.py` with dataset YAML and Dockerfile
 - [ ] Short method and ablation write-up in `docs/`
@@ -352,21 +360,16 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 |---|---|
 | **Landing page** | [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app) |
 | **Source code** | [github.com/sonubiswal/sentinelvision](https://github.com/sonubiswal/sentinelvision) |
-| **Demo video** | *Coming soon: will be attached to the repo's Releases* |
 | **Model weights** | [wesleymqsss/yolov8m-construction-site-safety](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety) |
 | **License** | Apache-2.0 |
 
 ---
 
-## License
+<div align="center">
 
 Released under the **Apache-2.0** license.
 
-<div align="center">
-
-<br/>
-
-**If SentinelVision is useful to you, a star on the repo helps a lot.**
+If SentinelVision is useful to you, a star on the repo helps a lot.
 
 [Live site](https://sentinelvision-sonubiswal.netlify.app) ·
 [GitHub](https://github.com/sonubiswal/sentinelvision) ·
