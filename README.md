@@ -11,9 +11,9 @@ and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud 
 
 <br/>
 
-[![Live site](https://img.shields.io/badge/🌐_Live_Site-Visit-2457ff?style=for-the-badge)](https://sentinelvision-sonubiswal.netlify.app)
-[![Source](https://img.shields.io/badge/🐙_Source-GitHub-0d1b2a?style=for-the-badge)](https://github.com/sonubiswal/sentinelvision)
-[![Model weights](https://img.shields.io/badge/🤗_Weights-Hugging_Face-ffcc00?style=for-the-badge&labelColor=0d1b2a)](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety)
+[![Live site](https://img.shields.io/badge/Live_Site-Visit-2457ff?style=for-the-badge)](https://sentinelvision-sonubiswal.netlify.app)
+[![Source](https://img.shields.io/badge/Source-GitHub-0d1b2a?style=for-the-badge)](https://github.com/sonubiswal/sentinelvision)
+[![Model weights](https://img.shields.io/badge/Weights-Hugging_Face-ffcc00?style=for-the-badge&labelColor=0d1b2a)](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety)
 
 ![status](https://img.shields.io/badge/status-Phase%202%20complete-2457ff?style=flat-square)
 ![tests](https://img.shields.io/badge/tests-289%20passing-12a56b?style=flat-square)
@@ -24,11 +24,11 @@ and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud 
 ![ByteTrack](https://img.shields.io/badge/ByteTrack-tracking-2457ff?style=flat-square)
 
 **[Live site](https://sentinelvision-sonubiswal.netlify.app)** ·
-**[Quick start](#-try-it-in-two-minutes)** ·
-**[How it works](#-how-the-pipeline-works)** ·
-**[Demo](#-demo)** ·
-**[Roadmap](#-roadmap)** ·
-**[Links](#-links)**
+**[Quick start](#try-it-in-two-minutes)** ·
+**[How it works](#how-the-pipeline-works)** ·
+**[Demo](#demo)** ·
+**[Roadmap](#roadmap)** ·
+**[Links](#links)**
 
 </div>
 
@@ -43,20 +43,20 @@ and writes a **tamper-evident audit trail**. Commodity cameras. A CPU. No cloud 
 
 ---
 
-## ✨ Highlights
+## Highlights
 
 | | |
 |---|---|
-| 🧍 **Per-worker attribution** | Every `NO-Hardhat` is bound to a tracked person, never a floating box. |
-| 🗳️ **Temporal voting** | A violation must appear in 6 of the last 10 frames. One bad frame can never raise an event. |
-| 🔐 **Tamper-evident audit trail** | SHA-256 hash-chained event log. Edit one character and the chain breaks. |
-| ⚙️ **Class-aware thresholds** | Recall-tolerant for people, precision-strict for violations. |
-| 🖥️ **Runs anywhere** | Commodity cameras, CPU only, zero cloud dependency. |
-| 🧪 **Weight-free tests** | 289 tests, 96% coverage, no torch, no weights, no camera required. |
+| **Per-worker attribution** | Every `NO-Hardhat` is bound to a tracked person, never a floating box. |
+| **Temporal voting** | A violation must appear in 6 of the last 10 frames. One bad frame can never raise an event. |
+| **Tamper-evident audit trail** | SHA-256 hash-chained event log. Edit one character and the chain breaks. |
+| **Class-aware thresholds** | Recall-tolerant for people, precision-strict for violations. |
+| **Runs anywhere** | Commodity cameras, CPU only, zero cloud dependency. |
+| **Weight-free tests** | 289 tests, 96% coverage, no torch, no weights, no camera required. |
 
 ---
 
-## 🚀 Try it in two minutes
+## Try it in two minutes
 
 ```bash
 pip install -e ".[dev,vision]"
@@ -68,24 +68,24 @@ The demo app has four tabs:
 
 | Tab | What it shows |
 |---|---|
-| 🖼️ **Image** | Detect, bind PPE to each worker, judge against your policy, annotate. |
-| 🎞️ **Video · temporal vote** | The same pipeline over footage, with a 6-of-10 quorum before a violation is committed. |
-| 🔗 **Audit trail** | A SHA-256 hash-chained `events.jsonl`. Edit any character, press **Verify chain**, and watch it break. |
-| 📋 **Policy & classes** | The ten-class taxonomy with per-class confidence bars. |
+| **Image** | Detect, bind PPE to each worker, judge against your policy, annotate. |
+| **Video · temporal vote** | The same pipeline over footage, with a 6-of-10 quorum before a violation is committed. |
+| **Audit trail** | A SHA-256 hash-chained `events.jsonl`. Edit any character, press **Verify chain**, and watch it break. |
+| **Policy & classes** | The ten-class taxonomy with per-class confidence bars. |
 
 > Set `SV_MODEL=path/to/weights.pt` to use weights other than `models/ppe.pt`.
 
 ---
 
-## 🎬 Demo
+## Demo
 
-> 🌐 **Try the landing page:** [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app)
+> **Landing page:** [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app)
 >
-> 🎥 *60-second webcam demo: coming soon (will be attached to the repo's Releases).*
+> *60-second webcam demo: coming soon (will be attached to the repo's Releases).*
 
 ---
 
-## 🧠 Why this is not "another YOLO PPE detector"
+## Why this is not "another YOLO PPE detector"
 
 ```
 frame → YOLO → draw box → done        # what everyone else ships
@@ -96,8 +96,8 @@ failure modes that come with skipping them:
 
 | Failure mode | Why it happens | What SentinelVision does | Phase |
 |---|---|---|---|
-| Single-frame false positives | One blurry frame flags a violation | N-of-M temporal voting per track | 2 ✅ |
-| Violation with no owner | `NO-Hardhat` detected, but *which* worker? | Person attribution via IoU / containment + track ID | 2 ✅ |
+| Single-frame false positives | One blurry frame flags a violation | N-of-M temporal voting per track | 2 (done) |
+| Violation with no owner | `NO-Hardhat` detected, but *which* worker? | Person attribution via IoU / containment + track ID | 2 (done) |
 | One-size-fits-all rules | A welding bay is not a loading dock | Zone policies with per-zone PPE requirements | 3 |
 | Alert fatigue | 200 alerts a shift, all ignored | Per-worker cooldown and severity tiers | 3–4 |
 | No audit trail | "Prove it happened" | Hash-chained event log in SQLite / Postgres | 4 |
@@ -109,7 +109,7 @@ failure modes that come with skipping them:
 
 ---
 
-## 🔬 How the pipeline works
+## How the pipeline works
 
 ```mermaid
 flowchart LR
@@ -138,7 +138,7 @@ event until the pipeline is sure it is looking at a person and not a flicker.
 | 5 | **Audit** | Committed events carry a SHA-256 digest over their contents and the previous digest. |
 
 <details>
-<summary><b>📦 Example event (click to expand)</b></summary>
+<summary><b>Example event (click to expand)</b></summary>
 
 <br/>
 
@@ -162,7 +162,7 @@ event until the pipeline is sure it is looking at a person and not a flicker.
 
 ---
 
-## 🏷️ The class taxonomy
+## The class taxonomy
 
 ```python
 CLASS_THRESHOLDS = {
@@ -183,7 +183,7 @@ A missed worker is cheap. A false violation erodes trust. Hence the split: recal
 people, precision-strict bars for violation classes. Combined with the 6-of-10 quorum, raising an
 alarm always demands more evidence than recording compliance.
 
-### 🧱 Two foundations, deliberately hardened
+### Two foundations, deliberately hardened
 
 **1. Name normalization.** The dataset emits `NO-Safety Vest`, with an uppercase prefix and a space
 inside the name, while `Safety Vest` is a *compliant* class. Naive `startswith("NO")` or `split` logic
@@ -215,7 +215,7 @@ the frame still gets a readable label.
 
 ---
 
-## 💻 Quickstart (CLI)
+## Quickstart (CLI)
 
 ```bash
 # dev install (tests + lint only: no torch, no weights, no camera)
@@ -238,7 +238,7 @@ Events stream to the JSONL log while the run is live, and the stats block prints
 append-only: read the tail, never edit it.
 
 <details>
-<summary><b>📋 Sample output of <code>--list-classes</code></b></summary>
+<summary><b>Sample output of <code>--list-classes</code></b></summary>
 
 <br/>
 
@@ -262,7 +262,7 @@ vehicle         0.55
 
 ---
 
-## 🗂️ Repository layout
+## Repository layout
 
 <details>
 <summary><b>Expand the project tree</b></summary>
@@ -304,7 +304,7 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 
 ---
 
-## 🧩 Design decisions
+## Design decisions
 
 | Layer | Choice | Why not the obvious pick |
 |---|---|---|
@@ -321,20 +321,20 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 | Phase | Deliverable | Time | Status |
 |:---:|---|:---:|:---:|
-| **1** | Tested detector, taxonomy, CLI, BGR-correct visualization | 1 day | ✅ Done |
-| **2** | ByteTrack IDs, person attribution, N-of-M voting, `ViolationEvent` | 3 days | ✅ Done |
-| **3** | Zone engine: polygon geofences + per-zone PPE policy | 2 days | ⏳ Planned |
-| **4** | Audit store: hash-chained SQLite log, snapshot archive | 2 days | ⏳ Planned |
-| **5** | FastAPI + WebSocket dashboard | 3 days | ⏳ Planned |
-| **6** | Auto-generated shift reports (PDF) + analytics | 2 days | ⏳ Planned |
-| **7** | ONNX / TensorRT export, Docker Compose, Jetson profile | 2 days | ⏳ Planned |
-| **8** | Benchmark on SH17 / Pictor-v3, publish numbers, open weights | 3 days | ⏳ Planned |
+| **1** | Tested detector, taxonomy, CLI, BGR-correct visualization | 1 day | Done |
+| **2** | ByteTrack IDs, person attribution, N-of-M voting, `ViolationEvent` | 3 days | Done |
+| **3** | Zone engine: polygon geofences + per-zone PPE policy | 2 days | Planned |
+| **4** | Audit store: hash-chained SQLite log, snapshot archive | 2 days | Planned |
+| **5** | FastAPI + WebSocket dashboard | 3 days | Planned |
+| **6** | Auto-generated shift reports (PDF) + analytics | 2 days | Planned |
+| **7** | ONNX / TensorRT export, Docker Compose, Jetson profile | 2 days | Planned |
+| **8** | Benchmark on SH17 / Pictor-v3, publish numbers, open weights | 3 days | Planned |
 
-### 📌 Still to ship for a credible public release
+### Still to ship for a credible public release
 
 - [ ] Benchmark table
 - [ ] 60-second real-webcam demo GIF
@@ -346,19 +346,19 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 
 ---
 
-## 🔗 Links
+## Links
 
 | | |
 |---|---|
-| 🌐 **Landing page** | [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app) |
-| 🐙 **Source code** | [github.com/sonubiswal/sentinelvision](https://github.com/sonubiswal/sentinelvision) |
-| 🎬 **Demo video** | *Coming soon: will be attached to the repo's Releases* |
-| 🤗 **Model weights** | [wesleymqsss/yolov8m-construction-site-safety](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety) |
-| 📄 **License** | Apache-2.0 |
+| **Landing page** | [sentinelvision-sonubiswal.netlify.app](https://sentinelvision-sonubiswal.netlify.app) |
+| **Source code** | [github.com/sonubiswal/sentinelvision](https://github.com/sonubiswal/sentinelvision) |
+| **Demo video** | *Coming soon: will be attached to the repo's Releases* |
+| **Model weights** | [wesleymqsss/yolov8m-construction-site-safety](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety) |
+| **License** | Apache-2.0 |
 
 ---
 
-## 📄 License
+## License
 
 Released under the **Apache-2.0** license.
 
@@ -366,10 +366,10 @@ Released under the **Apache-2.0** license.
 
 <br/>
 
-**If SentinelVision is useful to you, a ⭐ on the repo helps a lot.**
+**If SentinelVision is useful to you, a star on the repo helps a lot.**
 
-[🌐 Live site](https://sentinelvision-sonubiswal.netlify.app) ·
-[🐙 GitHub](https://github.com/sonubiswal/sentinelvision) ·
-[🤗 Weights](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety)
+[Live site](https://sentinelvision-sonubiswal.netlify.app) ·
+[GitHub](https://github.com/sonubiswal/sentinelvision) ·
+[Weights](https://huggingface.co/wesleymqsss/yolov8m-construction-site-safety)
 
 </div>
