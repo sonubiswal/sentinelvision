@@ -50,14 +50,9 @@ and writes a **tamper-evident audit trail**. It runs on commodity cameras and a 
 
 ## At a glance
 
-<table>
-<tr>
-<td align="center" width="25%"><h3>6 of 10</h3>frames must agree<br/>before an event is raised</td>
-<td align="center" width="25%"><h3>SHA-256</h3>hash-chained<br/>audit log</td>
-<td align="center" width="25%"><h3>289</h3>weight-free tests<br/>at 96% coverage</td>
-<td align="center" width="25%"><h3>CPU only</h3>no GPU, no cloud,<br/>no camera needed to test</td>
-</tr>
-</table>
+| **6 of 10** | **SHA-256** | **CPU only** | **CCTV ready** | **Cloud optional** |
+|:---:|:---:|:---:|:---:|:---:|
+| frames must agree before an event is raised | hash-chained audit log | no GPU required, 289 weight-free tests | RTSP / IP cameras, webcams, video files | runs fully on-premise by default |
 
 **Benchmark (Phase 8):** SH17 val mAP@50 = `TBD` · mAP@50:95 = `TBD` · person-attributed violation F1 = `TBD`
 
