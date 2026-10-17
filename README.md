@@ -31,7 +31,6 @@ PPE compliance that answers the question every safety manager actually asks:<br/
 **[Live site](https://sentinelvision-sonubiswal.netlify.app)** ·
 **[Quick start](#quick-start)** ·
 **[How it works](#how-it-works)** ·
-**[Roadmap](#roadmap)** ·
 **[Links](#links)**
 
 </div>
@@ -322,30 +321,6 @@ Everything is testable with zero heavy dependencies: `ultralytics` is imported l
 | Testing | pytest + pytest-cov + hypothesis | Property-based tests for the rule engine |
 | CI | GitHub Actions: lint, test, ONNX export smoke test | Every change is checked |
 | Packaging | `uv`, falling back to pip | Fast installs, no lock-in |
-
----
-
-## Roadmap
-
-| Phase | Deliverable | Time | Status |
-|:---:|---|:---:|:---:|
-| **1** | Tested detector, taxonomy, CLI, BGR-correct visualization | 1 day | Done |
-| **2** | ByteTrack IDs, person attribution, N-of-M voting, `ViolationEvent` | 3 days | Done |
-| **3** | Zone engine: polygon geofences + per-zone PPE policy | 2 days | Planned |
-| **4** | Audit store: hash-chained SQLite log, snapshot archive | 2 days | Planned |
-| **5** | FastAPI + WebSocket dashboard | 3 days | Planned |
-| **6** | Auto-generated shift reports (PDF) + analytics | 2 days | Planned |
-| **7** | ONNX / TensorRT export, Docker Compose, Jetson profile | 2 days | Planned |
-| **8** | Benchmark on SH17 / Pictor-v3, publish numbers, open weights | 3 days | Planned |
-
-### Remaining for a credible public release
-
-- [ ] Benchmark table
-- [ ] Hosted demo
-- [ ] Reproducible `train.py` with dataset YAML and Dockerfile
-- [ ] Short method and ablation write-up in `docs/`
-- [ ] Open weights on the Hugging Face Hub
-- [ ] Honest ablation against a baseline YOLOv8n PPE detector
 
 ---
 
